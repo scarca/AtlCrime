@@ -59,10 +59,9 @@ ContourOverlay.prototype.onAdd = function() {
         nd.push(cliff);
         nd.unshift(cliff);
       });
-
-  var colours = ['#000099','#0000FF','#3399FF','#00CCFF','#00CC00','#66FF00','#FFFF00','#CC0000','#FF6633'],
-        zs = [-0.1, 20.0, 50.0, 75.0, 90.0, 95.0, 98.0, 99.0, 99.9, 100.1]
-  this.c.contour(d, 0, xs.length - 1, 0, ys.length - 1, xs, ys, zs.length, zs);
+  this.zs = [6, 17, 36, 64, 112, 178, 350, 618, 710.47];
+  this.colours = ['#000099','#0000FF','#3399FF','#00CCFF','#00CC00','#66FF00','#FFFF00','#CC0000','#FF6633'],
+  this.c.contour(d, 0, xs.length - 1, 0, ys.length - 1, xs, ys, this.zs.length, this.zs);
 
 }
 
@@ -77,13 +76,13 @@ ContourOverlay.prototype.draw = function() {
   var svgHeight = sw.y - ne.y;
 
   this.cont_layer
-  				.attr("width",10000)
-  				.attr("height",10000)
-  				.style("top",-5000)
-  				.style("left",-5000);
+  				.attr("width", ne.x - sw.x + 10000)
+  				.attr("height",sw.y - ne.y + 10000)
+  				.style("top",ne.y-5000)
+  				.style("left",sw.x-5000);
 
-  var colours = ['#000099','#0000FF','#3399FF','#00CCFF','#00CC00','#66FF00','#FFFF00','#CC0000','#FF6633'],
-        zs = [-0.1, 20.0, 50.0, 75.0, 90.0, 95.0, 98.0, 99.0, 99.9, 100.1]
+  var colours = this.colours;
+  var zs = this.zs;
   var cont = this.cont_group.selectAll("path").data(this.c.contourList())
   				// update existing paths
   				.style("fill",function(d) {
