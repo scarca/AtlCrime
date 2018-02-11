@@ -17,8 +17,8 @@ function initMap() {
   );
 
   //load d3
-  d3.json("./data.json", function(data) {
-    console.log(data); 
+  d3.json("https://raw.githubusercontent.com/scarca/AtlCrime/master/data.json", function(data) {
+    console.log(data);
     overlay = new ContourOverlay(bounds, map, data)
   })
 
@@ -35,6 +35,7 @@ function ContourOverlay(bounds, map, data) {
   this.div_ = null;
   this.cont_group_ = null;
   //call setMap
+  this.d3_ = d3
   this.setMap(map);
 
 }
@@ -54,7 +55,7 @@ ContourOverlay.prototype.onAdd = function() {
   var cont_group = this.cont_group_;
   var sw = projection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
   var ne = projection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
-  cont_layer.attr('width', ne.x - sw.x).attr("height", ne.y - sw.y)
+  cont_layer.attr('width', Math.abs(ne.x - sw.x)).attr("height", Math.abs(ne.y - sw.y))
     .style("position", "absolute").style("top", ne.y).style("left", sw.x);
 }
 
@@ -68,29 +69,35 @@ ContourOverlay.prototype.draw = function() {
 
 
   var c = new Conrec();
+  padX = 0;
+  padY = 0;
   xs = this.data_.x;
   ys = this.data_.y;
   d = this.data_.z;
-  c.contour(d, 0, xs.length - 1, 0, ys.length - 1, xs, ys);
+  var colours = ['#000099','#0000FF','#3399FF','#00CCFF','#00CC00','#66FF00','#FFFF00','#CC0000','#FF6633'],
+				zs = [-0.1, 20.0, 50.0, 75.0, 90.0, 95.0, 98.0, 99.0, 99.9, 100.1]
+  c.contour(d, 0, xs.length - 1, 0, ys.length - 1, xs, ys, zs.length, zs);
   var cont = this.cont_group_.selectAll("path").data(c.contourList())
-				// update existing paths
-				.style("fill",function(d) {
-					return colours[zs.indexOf(d.level)-1];
-				})
-				.style("stroke","black")
-				.attr("d",d3.svg.line()
-					// the paths are given in lat and long coordinates that need to be changed into pixel coordinates
-					.x(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).x - padX; })
-					.y(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).y - padY; })
-					)
-				.enter().append("svg:path")
-				.style("stroke","black")
-				.attr("d",d3.svg.line()
-					// the paths are given in lat and long coordinates that need to be changed into pixel coordinates
-					.x(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).x - padX; })
-					.y(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).y - padY; })
-				);
-
+  				// update existing paths
+  				.style("fill",function(d) {
+  					return colours[zs.indexOf(d.level)-1];
+  				})
+  				.style("stroke","black")
+  				.attr("d",d3.line()
+  					// the paths are given in lat and long coordinates that need to be changed into pixel coordinates
+  					.x(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).x - padX; })
+  					.y(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).y - padY; })
+  					)
+  				.enter().append("svg:path")
+  				.style("fill",function(d) {
+  				return colours[zs.indexOf(d.level)-1];
+  				})
+  				.style("stroke","black")
+  				.attr("d",d3.line()
+  					// the paths are given in lat and long coordinates that need to be changed into pixel coordinates
+  					.x(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).x - padX; })
+  					.y(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).y - padY; })
+  				);
 
 }
 
