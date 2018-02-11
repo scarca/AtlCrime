@@ -45,18 +45,13 @@ function ContourOverlay(bounds, map, data) {
  */
 ContourOverlay.prototype.onAdd = function() {
   //has contour plots
-  var projection = this.getProjection();
-
-  var cont_layer = d3.select(this.getPanes().overlayLayer).append("div").attr("class", "contour")
+  this.cont_layer = d3.select(this.getPanes().overlayLayer).append("div").attr("class", "contour")
     .append("svg:svg");
 
   //add a group to the svg object; gropus can be affected by the opacity.
-  this.cont_group_ = cont_layer.append("g").attr("opacity", 0.3);
+  this.cont_group_ = this.cont_layer.append("g").attr("opacity", 0.3);
   var cont_group = this.cont_group_;
-  var sw = projection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
-  var ne = projection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
-  cont_layer.attr('width', Math.abs(ne.x - sw.x)).attr("height", Math.abs(ne.y - sw.y))
-    .style("position", "absolute").style("top", ne.y).style("left", sw.x);
+
 }
 
 ContourOverlay.prototype.draw = function() {
@@ -65,7 +60,10 @@ ContourOverlay.prototype.draw = function() {
 
   //determine the min and max latitudes and longitudes
   //get bounds
-
+  var sw = projection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
+  var ne = projection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+  this.cont_layer.attr('width', Math.abs(ne.x - sw.x)).attr("height", Math.abs(ne.y - sw.y))
+    .style("position", "absolute").style("top", ne.y).style("left", sw.x);
 
 
   var c = new Conrec();
