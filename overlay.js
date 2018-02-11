@@ -59,7 +59,7 @@ ContourOverlay.prototype.onAdd = function() {
         nd.push(cliff);
         nd.unshift(cliff);
       });
-  this.zs = [6, 17, 36, 64, 112, 178, 350, 618, 710.47];
+  this.zs = [36, 73, 123, 192, 313, 495, 820, 1186, 1271.87];
   this.colours = ['#000099','#0000FF','#3399FF','#00CCFF','#00CC00','#66FF00','#FFFF00','#CC0000','#FF6633'],
   this.c.contour(d, 0, xs.length - 1, 0, ys.length - 1, xs, ys, this.zs.length, this.zs);
 
