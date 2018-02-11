@@ -31,6 +31,10 @@ function ContourOverlay(bounds, map, data) {
   this.bounds_ = bounds;
   this.map_ = map;
   this.data_ = data;
+  xbound = data['xbound'];
+  ybound = data['ybound'];
+  this.sw = new google.maps.LatLng(ybound[0], xbound[0])
+  this.ne = new google.maps.LatLng(ybound[1], xbound[1])
   //define property to hold image div.
   this.div_ = null;
   this.cont_group_ = null;
@@ -60,8 +64,8 @@ ContourOverlay.prototype.draw = function() {
 
   //determine the min and max latitudes and longitudes
   //get bounds
-  var sw = projection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
-  var ne = projection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
+  var sw = projection.fromLatLngToDivPixel(this.sw);
+  var ne = projection.fromLatLngToDivPixel(this.ne);
   this.cont_layer.attr('width', Math.abs(ne.x - sw.x)).attr("height", Math.abs(ne.y - sw.y))
     .style("position", "absolute").style("top", ne.y).style("left", sw.x);
 
