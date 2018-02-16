@@ -38,16 +38,20 @@ function ContourOverlay(bounds, map, data) {
 ContourOverlay.prototype.onAdd = function() {
   //has contour plots
   var layer = d3.select(this.getPanes().overlayLayer).append("div")
-			.attr("class", "stations");
-  layer.attr('position', 'absolute');
-	// Add the section that will contain the contour plot
-	this.cont_layer = d3.select(this.getPanes().overlayLayer).append("div")
-			.attr("class","contour").append("svg:svg");
+    .attr("class", "stations");
 
-	// Add a group to the SVG object; groups can be affected by the opacity
-	this.cont_group = this.cont_layer.append("g").attr("opacity",0.3);
+  // Add the section that will contain the contour plot
+  var cont_layer = d3.select(this.getPanes().overlayLayer).append("div")
+      .attr("class","contour").append("svg:svg");
+
+  // Add a group to the SVG object; groups can be affected by the opacity
+  var cont_group = cont_layer.append("g").attr("opacity",0.3);
+  this.layer = layer;
+  this.cont_layer = cont_layer;
+  this.cont_group = cont_group;
 
   this.c = new Conrec();
+  console.log(this.data_['xbound'][0], this.data_['xbound'][1], this.data_['ybound'][0], this.data_['ybound'][1]);
 
   var xs = this.data_.x;
   var ys = this.data_.y;
@@ -62,25 +66,24 @@ ContourOverlay.prototype.onAdd = function() {
   this.zs = [36, 73, 123, 192, 313, 495, 820, 1186, 1358.0];
   this.colours = ['#000099','#0000FF','#3399FF','#00CCFF','#00CC00','#66FF00','#FFFF00','#CC0000','#FF6633'],
   this.c.contour(d, 0, xs.length - 1, 0, ys.length - 1, xs, ys, this.zs.length, this.zs);
-
 }
 
 ContourOverlay.prototype.draw = function() {
   //south-west and north-east of overlay to peg it to the correct position and size
   var projection = this.getProjection();
-
   //get bounds
   var sw = projection.fromLatLngToDivPixel(this.bounds_.getSouthWest());
   var ne = projection.fromLatLngToDivPixel(this.bounds_.getNorthEast());
-  var svgWidth = ne.x - sw.x;
-  var svgHeight = sw.y - ne.y;
 
+  var w = ne.x - sw.x;
+  var h = sw.y - ne.y;
+  console.log(w, h)
   this.cont_layer
-  				.attr("width", ne.x - sw.x + 10000)
-  				.attr("height",sw.y - ne.y + 10000)
-  				.style("top",ne.y-5000)
-  				.style("left",sw.x-5000);
-
+  				.attr("width", w* 2)
+  				.attr("height",h* 2)
+          .style('position', "absolute")
+  				.style("top", -h)
+  				.style("left",-w);
   var colours = this.colours;
   var zs = this.zs;
   var cont = this.cont_group.selectAll("path").data(this.c.contourList())
@@ -91,8 +94,8 @@ ContourOverlay.prototype.draw = function() {
   				.style("stroke","black")
   				.attr("d",d3.line()
   					// the paths are given in lat and long coordinates that need to be changed into pixel coordinates
-  					.x(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).x; })
-  					.y(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).y; })
+  					.x(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).x +w;})
+  					.y(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).y +h; })
   					)
   				.enter().append("svg:path")
   				.style("fill",function(d) {
@@ -101,8 +104,8 @@ ContourOverlay.prototype.draw = function() {
   				.style("stroke","black")
   				.attr("d",d3.line()
   					// the paths are given in lat and long coordinates that need to be changed into pixel coordinates
-  					.x(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).x; })
-  					.y(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).y; })
+  					.x(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).x +w;})
+  					.y(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).y +h; })
   				);
 console.log("Done drawing");
 }
