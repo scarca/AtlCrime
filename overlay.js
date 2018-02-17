@@ -51,7 +51,6 @@ ContourOverlay.prototype.onAdd = function() {
   this.cont_group = cont_group;
 
   this.c = new Conrec();
-  console.log(this.data_['xbound'][0], this.data_['xbound'][1], this.data_['ybound'][0], this.data_['ybound'][1]);
 
   var xs = this.data_.x;
   var ys = this.data_.y;
@@ -77,7 +76,6 @@ ContourOverlay.prototype.draw = function() {
 
   var w = ne.x - sw.x;
   var h = sw.y - ne.y;
-  console.log(w, h)
   this.cont_layer
   				.attr("width", w* 2)
   				.attr("height",h* 2)
@@ -107,7 +105,6 @@ ContourOverlay.prototype.draw = function() {
   					.x(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).x +w;})
   					.y(function(d) { return (projection.fromLatLngToDivPixel(new google.maps.LatLng(d.y, d.x))).y +h; })
   				);
-console.log("Done drawing");
 }
 
 //OnRemove is called if we set overlay's map property to null.
