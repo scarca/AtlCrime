@@ -62,7 +62,7 @@ ContourOverlay.prototype.onAdd = function() {
         nd.push(cliff);
         nd.unshift(cliff);
       });
-  this.zs = [0.0368, 0.12, 0.2448, 0.4096, 0.6576, 1.0464, 1.2064, 1.6512, 1.9616, 4.3697];
+  this.zs = [0.12, 0.2448, 0.4096, 0.6576, 1.0464, 1.2064, 1.6512, 1.9616, 4];
   this.colours = ['#000099','#0000FF','#3399FF','#00CCFF','#00CC00','#66FF00','#FFFF00','#CC0000','#FF6633'],
   this.c.contour(d, 0, xs.length - 1, 0, ys.length - 1, xs, ys, this.zs.length, this.zs);
 }
@@ -84,10 +84,11 @@ ContourOverlay.prototype.draw = function() {
   				.style("left",-w);
   var colours = this.colours;
   var zs = this.zs;
+
   var cont = this.cont_group.selectAll("path").data(this.c.contourList())
   				// update existing paths
   				.style("fill",function(d) {
-  					return colours[zs.indexOf(d.level)-1];
+  					return colours[zs.indexOf(d.level)];
   				})
   				.style("stroke","black")
   				.attr("d",d3.line()
@@ -97,7 +98,7 @@ ContourOverlay.prototype.draw = function() {
   					)
   				.enter().append("svg:path")
   				.style("fill",function(d) {
-  				return colours[zs.indexOf(d.level)-1];
+  				  return colours[zs.indexOf(d.level)-1];
   				})
   				.style("stroke","black")
   				.attr("d",d3.line()
