@@ -5,7 +5,7 @@ function getRandomColor() {
 }
 function initMap(shapes) {
   var map = new google.maps.Map(document.getElementById('map'), {
-    zoom: 15,
+    zoom: 12,
     center: {
       'lat': 33.77679,
       'lng': -84.400279
