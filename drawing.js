@@ -26,38 +26,14 @@ function initMap(shapes) {
       shapes[i]['coordinates'][j] = new google.maps.MVCArray(shapes[i]['coordinates'][j]);
     }
     var coors = new google.maps.MVCArray(shapes[i]['coordinates'])
-    var rndcolor = "#1133FF"
     var path = new google.maps.Polygon({
       paths: coors,
       strokeColor: colours[i],
-      strokeOpacity: 0.1,
+      strokeOpacity: 0.2,
       strokeWeight: 3,
       fillColor: colours[i],
-      flilOpacity: 0.1
+      fillOpacity: 0.2
     });
     path.setMap(map);
   }
-  // }
-  // for (i in o_shapes) {
-  //   //process coordinates
-  //   for (j in o_shapes[i]['coordinates']) {
-  //     for (k in o_shapes[i]['coordinates'][j]) {
-  //       o_shapes[i]['coordinates'][j][k] = new google.maps.LatLng(
-  //         o_shapes[i]['coordinates'][j][k]['lat'],
-  //         o_shapes[i]['coordinates'][j][k]['lng']);
-  //     }
-  //     o_shapes[i]['coordinates'][j] = new google.maps.MVCArray(o_shapes[i]['coordinates'][j]);
-  //   }
-  //   var ncoors = new google.maps.MVCArray(o_shapes[i]['coordinates'])
-  //   var nrndcolor = "#333333"
-  //   var npath = new google.maps.Polygon({
-  //     paths: ncoors,
-  //     strokeColor: nrndcolor,
-  //     strokeOpacity: 0.8,
-  //     strokeWeight: 3,
-  //     fillColor: nrndcolor,
-  //     flilOpacity: 0.35
-  //   });
-  //   npath.setMap(map);
-  // }
 }
